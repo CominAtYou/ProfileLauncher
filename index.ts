@@ -9,6 +9,26 @@ function makeWindowPersist() { // make the window persist for non-shell users
     yeet.question("Press enter to exit. ", () => {yeet.close()});
 }
 
+function checkForUpdates() {
+    const requestOptions = {
+        hostname: 'arc.cominatyou.com',
+        port: 443,
+        path: '/sw-versioning/ProfileLauncher.json',
+        method: 'GET'
+    }
+    const request = https.request(requestOptions, res => {
+        res.on('data', d => {
+            const data: {latestVersion: string, downloadURL: string} = JSON.parse(d);
+            if (data.latestVersion !== version) {
+                console.log(`\x1b[1mA new version of ProfileLauncher is available!\x1b[0m\n\nInstalled version: \x1b[31m${version}\x1b[34m => \x1b[32m${data.latestVersion}\x1b[0m\n`);
+                console.log(`Download the new version at ${data.downloadURL}`);
+            }
+        });
+    });
+    request.on('error', () => {}); // fail silently
+    request.end();
+}
+
 function getProfile(username: string) {
     const requestOptions = {
         hostname: 'api.roblox.com',
@@ -46,13 +66,16 @@ if (process.argv.includes('--help')) { // --help argument
     console.log("Made by CominAtYou - https://github.com/CominAtYou");
 } else if (process.argv.includes('--username') && /^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(process.argv[process.argv.indexOf('--username') + 1]) || process.argv.includes('-u') && /^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(process.argv[process.argv.indexOf('-u') + 1])) { // specify username on the command line with --username or -u arg, checks if valid content-wise with .test()
     const username = process.argv.includes('--username') ? process.argv[process.argv.indexOf('--username') + 1] : process.argv[process.argv.indexOf('-u') + 1]; // self explanatory
+    checkForUpdates();
     getProfile(username);
 } else if (process.argv[2] === undefined || !process.argv[2].startsWith('-')) { // for those who don't use command line args
+    checkForUpdates();
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
     });
-    rl.question("Enter a username: ", username => {
+
+    setTimeout(() => {rl.question("Enter a username: ", username => {
         if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(username) === true) {
             getProfile(username);
             rl.close();
@@ -61,7 +84,7 @@ if (process.argv.includes('--help')) { // --help argument
             rl.close();
             makeWindowPersist();
         }
-    })
+    })}, 200);
 } else { // complains about invalid arguments
     let args = process.argv;
     args.shift(); // remove the dumb file paths from the args array
