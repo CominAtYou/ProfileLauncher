@@ -2,7 +2,7 @@ import readline = require('readline');
 import https = require('https');
 import open = require('open');
 
-const version = "1.1";
+const version = "1.1a";
 
 function makeWindowPersist() { // make the window persist for non-shell users
     let yeet = readline.createInterface({input: process.stdin, output: process.stdout});
@@ -61,9 +61,13 @@ if (process.argv.includes('--help')) { // --help argument
     console.log("\x1b[1mUsage\x1b[0m: ProfileLauncher [arguments]\n");
     console.log("\x1b[1m\x1b[4mARGUMENTS\x1b[0m");
     console.log("-u, --username        Specify the username of the profile you wish to open.");
+    console.log("--version             Prints the version of the program.")
     console.log("--help                Displays this help message.\n");
     console.log("All arguments are optional.\n");
     console.log("Made by CominAtYou - https://github.com/CominAtYou");
+} else if (process.argv.includes("--version")) {
+    checkForUpdates();
+    console.log("Version " + version);
 } else if (process.argv.includes('--username') && /^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(process.argv[process.argv.indexOf('--username') + 1]) || process.argv.includes('-u') && /^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(process.argv[process.argv.indexOf('-u') + 1])) { // specify username on the command line with --username or -u arg, checks if valid content-wise with .test()
     const username = process.argv.includes('--username') ? process.argv[process.argv.indexOf('--username') + 1] : process.argv[process.argv.indexOf('-u') + 1]; // self explanatory
     checkForUpdates();
@@ -96,7 +100,7 @@ if (process.argv.includes('--help')) { // --help argument
             console.error(`Parameter required for argument '${args.includes('--username') ? '--username' : '-u'}'`);
         }
     } else { // invalid arg(s) passed
-        let validArgs = ['--username', '-u', '--help'];
+        let validArgs = ['--username', '-u', '--help', '--version'];
         let invalidArgs = args.filter(v => v.startsWith('-') && !validArgs.includes(v)); // remove the legitimate args if there are any, so that we only complain about the invalid ones
         if (invalidArgs.length > 0) { // I think this always returns true but eh
             console.error(`Invalid argument${invalidArgs.length === 1 ? '' : 's'}: ${invalidArgs.join(", ")}`);
