@@ -39,19 +39,32 @@ You will need Node.js installed to build. You will also need PowerShell Core if 
 ### Automated build
 1. Install tsc and pkg:
 
-    ```npm i -g typescript pkg```
-2. Run build.ps1.
+    ```
+    npm i -g typescript pkg
+    ```
+2. Compile the TypeScript source into JavaScript:
+
+    ```
+    tsc
+    ```
+3. Run build.ps1.
 ### Manual Build
 1. Clone the repository
 2. Install tsc and pkg:
 
-    ```npm i -g typescript pkg```
+    ```
+    npm i -g typescript pkg
+    ```
 3. Compile the TypeScript source into JavaScript:
 
-    ```tsc```
+    ```
+    tsc
+    ```
 4. Compile the JavaScript into an executable:
 
-    ```pkg index.js --target=YOUR_TARGET_HERE --output=DESIRED_FILE_NAME```
+    ```
+    pkg index.js --target=YOUR_TARGET_HERE --output=DESIRED_FILE_NAME
+    ```
 
     Replace `YOUR_TARGET_HERE` with one of the following in the 'target' column:
     | Operating System | Target |
