@@ -2,7 +2,7 @@ import readline = require('readline');
 import https = require('https');
 import open = require('open');
 
-const version = "1.1a";
+const version = "1.1b";
 
 function makeWindowPersist() { // make the window persist for non-shell users
     let yeet = readline.createInterface({input: process.stdin, output: process.stdout});
@@ -61,7 +61,7 @@ if (process.argv.includes('--help')) { // --help argument
     console.log("\x1b[1mUsage\x1b[0m: ProfileLauncher [arguments]\n");
     console.log("\x1b[1m\x1b[4mARGUMENTS\x1b[0m");
     console.log("-u, --username        Specify the username of the profile you wish to open.");
-    console.log("--version             Prints the version of the program.")
+    console.log("--version             Prints the version of the program.");
     console.log("--help                Displays this help message.\n");
     console.log("All arguments are optional.\n");
     console.log("Made by CominAtYou - https://github.com/CominAtYou");
