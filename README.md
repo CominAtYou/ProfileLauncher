@@ -35,7 +35,7 @@ Putting ProfileLauncher on your path is a good idea if you want to be able to ru
 2. **Rename the executable to `profilelauncher`**.
 3. Move the executable to `~/.local/bin` or `/usr/local/bin` if you want to make it available for every user. Some distrobutions (like Arch) forgo adding `~/.local/bin` to PATH by default, so if you opt for the former, you may need to manually add `/home/your_username/.local/bin` to your PATH variable.
 ## Building Yourself
-You will need Node.js installed to build. You will also need PowerShell Core if you are not on Windows and are building manually.
+You will need Node.js installed to build. You will also need PowerShell Core if you are not on Windows and are not building manually.
 ### Automated build
 1. Install tsc and pkg:
 
