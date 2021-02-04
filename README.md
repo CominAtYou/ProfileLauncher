@@ -42,6 +42,7 @@ By default, ProfileLauncher will check for updates every time it starts up. If y
 | ---------------- | ---- |
 | Windows          | C:\Users\you\\.profilelauncherconfig
 | macOS, Linux     | ~/.profilelauncherconfig |
+
 To re-enable update checks, run `profielauncher --enableUpdates true` if ProfileLauncher is on your [PATH](#putting-profilelauncher-on-your-path), or change the value in `.profilelauncherconfig` to `true`.
 ## Building ProfileLauncher
 You will need Node.js installed to build. You will also need PowerShell Core if you are not on Windows and are not building manually.
