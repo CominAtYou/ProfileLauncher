@@ -1,12 +1,11 @@
 # ProfileLauncher
 A utility to launch a Roblox profile from the command line or desktop.
-
 ## Usage
 ### From the Desktop
 Double click the executable and enter a username.
 ### From the Command Line
 ```
-ProfileLauncher [options]
+profilelauncher [options]
 ```
 #### Options:
 `-u, --username`: Pass in a username as an argument, bypassing the need to type it in when ProfileLauncher is launched.
@@ -16,7 +15,6 @@ ProfileLauncher [options]
 `--version`: Prints the version of the program.
 
 `--help`: Displays a list of options.
-
 ## Putting ProfileLauncher on your PATH
 Putting ProfileLauncher on your path is a good idea if you want to be able to run it from anywhere you can input a command, for example, on Windows, this enables ProfileLauncher to be launched just by typing `profilelauncher` into the Run dialog. If you plan to only run it from a desktop shortcut or a specific folder, then this is not nessecary.
 ### Windows
@@ -38,7 +36,14 @@ Putting ProfileLauncher on your path is a good idea if you want to be able to ru
 1. Download the latest respective Linux executable for your machine from the [releases](https://github.com/CominAtYou/ProfileLauncher/releases) page.
 2. **Rename the executable to `profilelauncher`**.
 3. Move the executable to `~/.local/bin` or `/usr/local/bin` if you want to make it available for every user. Some distrobutions (like Arch) forgo adding `~/.local/bin` to PATH by default, so if you opt for the former, you may need to manually add `/home/your_username/.local/bin` to your PATH variable.
-## Building Yourself
+## Enabling / Disabling update checks
+By default, ProfileLauncher will check for updates every time it starts up. If you don't want it to check for updates, you can disable the checks by running `profilelauncher --enableUpdateChecks false` from the command line if ProfileLauncher is on your [PATH](#putting-profilelauncher-on-your-path), or by changing the value in `.profilelauncherconfig`, located in your home directory.
+| Operating System | Path |
+| ---------------- | ---- |
+| Windows          | C:\Users\you\\.profilelauncherconfig
+| macOS, Linux     | ~/.profilelauncherconfig |
+To re-enable update checks, run `profielauncher --enableUpdates true` if ProfileLauncher is on your [PATH](#putting-profilelauncher-on-your-path), or change the value in `.profilelauncherconfig` to `true`.
+## Building ProfileLauncher
 You will need Node.js installed to build. You will also need PowerShell Core if you are not on Windows and are not building manually.
 ### Automated build
 1. Install tsc and pkg:
