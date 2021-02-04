@@ -40,7 +40,7 @@ Putting ProfileLauncher on your path is a good idea if you want to be able to ru
 By default, ProfileLauncher will check for updates every time it starts up. If you don't want it to check for updates, you can disable the checks by running `profilelauncher --enableUpdateChecks false` from the command line if ProfileLauncher is on your [PATH](#putting-profilelauncher-on-your-path), or by changing the value in `.profilelauncherconfig`, located in your home directory.
 | Operating System | Path |
 | ---------------- | ---- |
-| Windows          | C:\Users\you\\.profilelauncherconfig
+| Windows          | C:\Users\you\\.profilelauncherconfig |
 | macOS, Linux     | ~/.profilelauncherconfig |
 
 To re-enable update checks, run `profielauncher --enableUpdates true` if ProfileLauncher is on your [PATH](#putting-profilelauncher-on-your-path), or change the value in `.profilelauncherconfig` to `true`.
@@ -72,7 +72,7 @@ You will need Node.js installed to build. You will also need PowerShell Core if 
     ```
     Replace `YOUR_TARGET_HERE` with one of the following in the 'target' column:
     | Operating System | Target |
-    | ---------------- | -------------- |
+    | ---------------- | ------ |
     | Windows 64-bit   | node14-win-x64 |
     | Windows 32-bit   | node14-win-x86 |
     | macOS            | node14-darwin-x64 |
