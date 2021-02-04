@@ -3,7 +3,7 @@ Write-Output "1: Windows 64-bit"
 Write-Output "2: Windows 32-bit"
 Write-Output "3: macOS (Intel)"
 Write-Output "4: Linux 64-bit"
-Write-Output "All: All targets"
+Write-Output "All: All targets`n"
 
 $buildSelection = Read-Host "Selection"
 

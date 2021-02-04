@@ -91,9 +91,9 @@ if (process.argv.includes('--help')) { // --help argument
 } else if (process.argv.includes("--version")) {
     checkForUpdates();
     console.log("Version " + version);
-} else if (process.argv.includes('--enableUpdateChecking')) {
-    if (/(true|false)/i.test(process.argv[process.argv.indexOf('--enableUpdates') + 1])) {
-        const userChoice: boolean = JSON.parse(process.argv[process.argv.indexOf('--enableUpdates') + 1]);
+} else if (process.argv.includes('--enableUpdateChecks')) {
+    if (/(true|false)/i.test(process.argv[process.argv.indexOf('--enableUpdateChecks') + 1])) {
+        const userChoice: boolean = JSON.parse(process.argv[process.argv.indexOf('--enableUpdateChecks') + 1]);
         if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
             fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnLaunch: userChoice}, null, 2));
             console.log(`Update checking have been ${userChoice ? "enabled": "disabled"}.`);
@@ -103,7 +103,7 @@ if (process.argv.includes('--help')) { // --help argument
             setTimeout(() => { console.log(`Created config file! Updates have been ${userChoice ? "enabled" : "disabled"}.`) }, 500); // add a small delay because it feels nice
         }
     } else {
-        console.error(`Invalid parameter specified for --enableUpdates`);
+        console.error(`Invalid parameter specified for --enableUpdateChecks`);
     }
 } else if (process.argv.includes('--username') || process.argv.includes('-u')) { // specify username on the command line with --username or -u arg, checks if valid content-wise with .test()
     if (process.argv[process.argv.indexOf('--username') + 1] !== undefined || process.argv[process.argv.indexOf('-u') + 1] !== undefined) {
