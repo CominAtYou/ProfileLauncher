@@ -5,7 +5,9 @@ A utility to launch a Roblox profile from the command line or desktop.
 ### From the Desktop
 Double click the executable and enter a username.
 ### From the Command Line
-```ProfileLauncher [options]```
+```
+ProfileLauncher [options]
+```
 #### Options:
 `-u, --username`: Pass in a username as an argument, bypassing the need to type it in when ProfileLauncher is launched.
 
