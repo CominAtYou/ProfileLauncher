@@ -1,32 +1,52 @@
 import readline = require('readline');
 import https = require('https');
 import open = require('open');
+import fs = require('fs');
+import os = require('os');
 
-const version = "1.1b";
+const version = "1.2";
+function userUpdatesEnabled() {
+    if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
+        const config: {checkForUpdatesOnStartup: boolean | any} = JSON.parse(fs.readFileSync(`${os.homedir()}/.profilelauncherconfig`).toString());
+        if (typeof config.checkForUpdatesOnStartup === 'boolean') {
+            return config.checkForUpdatesOnStartup;
+        }
+        else {
+            console.error(`Error in configuration file: ${config.checkForUpdatesOnStartup}, a ${typeof config.checkForUpdatesOnStartup}, is not a boolean (true/false).\nPlease edit the value in ${os.homedir()}/.profilelauncherconfig to resolve this issue.\n`);
+            makeWindowPersist();
+            process.exit();
+        }
+    } else {
+        fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnStartup: true}, null, 2));
+        return true;
+    }
+}
 
 function makeWindowPersist() { // make the window persist for non-shell users
     let yeet = readline.createInterface({input: process.stdin, output: process.stdout});
-    yeet.question("Press enter to exit. ", () => {yeet.close()});
+    yeet.question("Press enter to exit.\n", () => {yeet.close()});
 }
 
 function checkForUpdates() {
-    const requestOptions = {
-        hostname: 'arc.cominatyou.com',
-        port: 443,
-        path: '/sw-versioning/ProfileLauncher.json',
-        method: 'GET'
-    }
-    const request = https.request(requestOptions, res => {
-        res.on('data', d => {
-            const data: {latestVersion: string, downloadURL: string} = JSON.parse(d);
-            if (data.latestVersion !== version) {
-                console.log(`\x1b[1mA new version of ProfileLauncher is available!\x1b[0m\n\nInstalled version: \x1b[31m${version}\x1b[34m => \x1b[32m${data.latestVersion}\x1b[0m\n`);
-                console.log(`Download the new version at ${data.downloadURL}`);
-            }
+    if (userUpdatesEnabled()) {
+        const requestOptions = {
+            hostname: 'arc.cominatyou.com',
+            port: 443,
+            path: '/sw-versioning/ProfileLauncher.json',
+            method: 'GET'
+        }
+        const request = https.request(requestOptions, res => {
+            res.on('data', d => {
+                const data: {latestVersion: string, downloadURL: string} = JSON.parse(d);
+                if (data.latestVersion !== version) {
+                    console.log(`\x1b[1mA new version of ProfileLauncher is available!\x1b[0m\n\nInstalled version: \x1b[31m${version}\x1b[34m => \x1b[32m${data.latestVersion}\x1b[0m\n`);
+                    console.log(`Download the new version at ${data.downloadURL}`);
+                }
+            });
         });
-    });
-    request.on('error', () => {}); // fail silently
-    request.end();
+        request.on('error', () => {}); // fail silently
+        request.end();
+    }
 }
 
 function getProfile(username: string) {
@@ -61,6 +81,8 @@ if (process.argv.includes('--help')) { // --help argument
     console.log("\x1b[1mUsage\x1b[0m: ProfileLauncher [arguments]\n");
     console.log("\x1b[1m\x1b[4mARGUMENTS\x1b[0m");
     console.log("-u, --username        Specify the username of the profile you wish to open.");
+    console.log("--enableUpdateChecks  Takes true or false as a value. Set to true to enable")
+    console.log("                       update checking, or set to false to disable it.")
     console.log("--version             Prints the version of the program.");
     console.log("--help                Displays this help message.\n");
     console.log("All arguments are optional.\n");
@@ -68,6 +90,21 @@ if (process.argv.includes('--help')) { // --help argument
 } else if (process.argv.includes("--version")) {
     checkForUpdates();
     console.log("Version " + version);
+} else if (process.argv.includes('--enableUpdateChecking')) {
+    if (/(true|false)/i.test(process.argv[process.argv.indexOf('--enableUpdates') + 1])) {
+        const userChoice: boolean = JSON.parse(process.argv[process.argv.indexOf('--enableUpdates') + 1]);
+        if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
+            fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnStartup: userChoice}, null, 2));
+            console.log(`Update checking have been ${userChoice ? "enabled": "disabled"}.`);
+        } else {
+            console.log("The config file doesn't seem to be present on your system. Creating it for you now...")
+            fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnStartup: userChoice}, null, 2));
+            setTimeout(() => { console.log(`Created config file! Updates have been ${userChoice ? "enabled" : "disabled"}.`) }, 500); // add a small delay because it feels nice
+        }
+    } else {
+        console.error(`Invalid parameter specified for --enableUpdates`);
+    }
+    // rework this to include error handling INSIDE of it instead of a separate 'else'
 } else if (process.argv.includes('--username') && /^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(process.argv[process.argv.indexOf('--username') + 1]) || process.argv.includes('-u') && /^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(process.argv[process.argv.indexOf('-u') + 1])) { // specify username on the command line with --username or -u arg, checks if valid content-wise with .test()
     const username = process.argv.includes('--username') ? process.argv[process.argv.indexOf('--username') + 1] : process.argv[process.argv.indexOf('-u') + 1]; // self explanatory
     checkForUpdates();
@@ -79,7 +116,7 @@ if (process.argv.includes('--help')) { // --help argument
         output: process.stdout
     });
 
-    setTimeout(() => {rl.question("Enter a username: ", username => {
+    setTimeout(() => {rl.question("Enter a username: ", username => { // let update checks finish first with little delay to actual program startup
         if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(username) === true) {
             getProfile(username);
             rl.close();
@@ -90,7 +127,7 @@ if (process.argv.includes('--help')) { // --help argument
         }
     })}, 200);
 } else { // complains about invalid arguments
-    let args = process.argv;
+    let args = [...process.argv];
     args.shift(); // remove the dumb file paths from the args array
     args.shift();
     if (args.includes('--username') || args.includes('-u')) { // if a username arg was passed, but the contents of it are invalid
@@ -100,7 +137,7 @@ if (process.argv.includes('--help')) { // --help argument
             console.error(`Parameter required for argument '${args.includes('--username') ? '--username' : '-u'}'`);
         }
     } else { // invalid arg(s) passed
-        let validArgs = ['--username', '-u', '--help', '--version'];
+        let validArgs = ['--username', '-u', '--help', '--version', '--enableUpdateChecking'];
         let invalidArgs = args.filter(v => v.startsWith('-') && !validArgs.includes(v)); // remove the legitimate args if there are any, so that we only complain about the invalid ones
         if (invalidArgs.length > 0) { // I think this always returns true but eh
             console.error(`Invalid argument${invalidArgs.length === 1 ? '' : 's'}: ${invalidArgs.join(", ")}`);

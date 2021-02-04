@@ -11,6 +11,8 @@ ProfileLauncher [options]
 #### Options:
 `-u, --username`: Pass in a username as an argument, bypassing the need to type it in when ProfileLauncher is launched.
 
+`--enableUpdateChecks`: Takes true or false as a value. Controls whether or not ProfileLauncher will check for updates on launch.
+
 `--version`: Prints the version of the program.
 
 `--help`: Displays a list of options.
@@ -62,7 +64,6 @@ You will need Node.js installed to build. You will also need PowerShell Core if 
     ```
     pkg index.js --target=YOUR_TARGET_HERE --output=DESIRED_FILE_NAME
     ```
-
     Replace `YOUR_TARGET_HERE` with one of the following in the 'target' column:
     | Operating System | Target |
     | ---------------- | -------------- |
