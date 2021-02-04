@@ -5,6 +5,7 @@ import fs = require('fs');
 import os = require('os');
 
 const version = "1.2";
+
 function userUpdatesEnabled() {
     if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
         const config: {checkForUpdatesOnLaunch: boolean | any} = JSON.parse(fs.readFileSync(`${os.homedir()}/.profilelauncherconfig`).toString());
@@ -22,7 +23,7 @@ function userUpdatesEnabled() {
     }
 }
 
-function makeWindowPersist() { // make the window persist for non-shell users
+function makeWindowPersist() { // make the window persist for non-cli users
     let yeet = readline.createInterface({input: process.stdin, output: process.stdout});
     yeet.question("Press enter to exit.\n", () => {yeet.close()});
 }
@@ -104,11 +105,18 @@ if (process.argv.includes('--help')) { // --help argument
     } else {
         console.error(`Invalid parameter specified for --enableUpdates`);
     }
-    // rework this to include error handling INSIDE of it instead of a separate 'else'
-} else if (process.argv.includes('--username') && /^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(process.argv[process.argv.indexOf('--username') + 1]) || process.argv.includes('-u') && /^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(process.argv[process.argv.indexOf('-u') + 1])) { // specify username on the command line with --username or -u arg, checks if valid content-wise with .test()
-    const username = process.argv.includes('--username') ? process.argv[process.argv.indexOf('--username') + 1] : process.argv[process.argv.indexOf('-u') + 1]; // self explanatory
-    checkForUpdates();
-    getProfile(username);
+} else if (process.argv.includes('--username') || process.argv.includes('-u')) { // specify username on the command line with --username or -u arg, checks if valid content-wise with .test()
+    if (process.argv[process.argv.indexOf('--username') + 1] !== undefined || process.argv[process.argv.indexOf('-u') + 1] !== undefined) {
+        const username = process.argv.includes('--username') ? process.argv[process.argv.indexOf('--username') + 1] : process.argv[process.argv.indexOf('-u') + 1]; // self explanatory
+        if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(username)) {
+            checkForUpdates();
+            getProfile(username);
+        } else {
+            console.error(`Invalid parameter specified for ${process.argv.includes('--username') ? '--username' : '-u'}`);
+        }
+    } else {
+        console.error(`Parameter required for argument '${process.argv.includes('--username') ? '--username' : '-u'}'`);
+    }
 } else if (process.argv[2] === undefined || !process.argv[2].startsWith('-')) { // for those who don't use command line args
     checkForUpdates();
     const rl = readline.createInterface({
@@ -128,20 +136,11 @@ if (process.argv.includes('--help')) { // --help argument
     })}, 200);
 } else { // complains about invalid arguments
     let args = [...process.argv];
-    args.shift(); // remove the dumb file paths from the args array
-    args.shift();
-    if (args.includes('--username') || args.includes('-u')) { // if a username arg was passed, but the contents of it are invalid
-        if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(args[args.indexOf('--username') + 1]) === false || /^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(args[args.indexOf('-u') + 1]) === false) {
-            console.error(`Invalid parameter specified for ${args.includes('--username') ? '--username' : '-u'}`);
-        } else if (args[args.indexOf('--username') + 1] === undefined || args[args.indexOf('-u') + 1] === undefined) {
-            console.error(`Parameter required for argument '${args.includes('--username') ? '--username' : '-u'}'`);
-        }
-    } else { // invalid arg(s) passed
-        let validArgs = ['--username', '-u', '--help', '--version', '--enableUpdateChecking'];
-        let invalidArgs = args.filter(v => v.startsWith('-') && !validArgs.includes(v)); // remove the legitimate args if there are any, so that we only complain about the invalid ones
-        if (invalidArgs.length > 0) { // I think this always returns true but eh
-            console.error(`Invalid argument${invalidArgs.length === 1 ? '' : 's'}: ${invalidArgs.join(", ")}`);
-            makeWindowPersist();
-        }
+    args.slice(2); // remove the dumb file paths from the args array
+    let validArgs = ['--username', '-u', '--help', '--version', '--enableUpdateChecks'];
+    let invalidArgs = args.filter(v => v.startsWith('-') && !validArgs.includes(v)); // remove the legitimate args if there are any, so that we only complain about the invalid ones
+    if (invalidArgs.length > 0) { // I think this always returns true but eh
+        console.error(`Invalid argument${invalidArgs.length === 1 ? '' : 's'}: ${invalidArgs.join(", ")}`);
+        makeWindowPersist();
     }
 }
