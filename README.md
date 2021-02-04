@@ -25,7 +25,7 @@ Putting ProfileLauncher on your path is a good idea if you want to be able to ru
 5. Open Control Panel, and search for `Environment Variables`.
 6. Select `Edit environment variables for your account`.
 7. Under `User variables`, select Path and click `Edit`.
-8. Click `New` and type in the file path of the folder you created.
+8. Click `New` and type in the path of the folder you created.
 ### macOS
 1. Download the latest macOS executable from the [releases](https://github.com/CominAtYou/ProfileLauncher/releases) page.
 2. **Rename the executable to `profilelauncher`**.
