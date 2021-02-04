@@ -42,12 +42,7 @@ You will need Node.js installed to build. You will also need PowerShell Core if 
     ```
     npm i -g typescript pkg
     ```
-2. Compile the TypeScript source into JavaScript:
-
-    ```
-    tsc
-    ```
-3. Run build.ps1.
+2. Run build.ps1.
 ### Manual Build
 1. Clone the repository
 2. Install tsc and pkg:
