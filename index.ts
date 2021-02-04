@@ -7,17 +7,17 @@ import os = require('os');
 const version = "1.2";
 function userUpdatesEnabled() {
     if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
-        const config: {checkForUpdatesOnStartup: boolean | any} = JSON.parse(fs.readFileSync(`${os.homedir()}/.profilelauncherconfig`).toString());
-        if (typeof config.checkForUpdatesOnStartup === 'boolean') {
-            return config.checkForUpdatesOnStartup;
+        const config: {checkForUpdatesOnLaunch: boolean | any} = JSON.parse(fs.readFileSync(`${os.homedir()}/.profilelauncherconfig`).toString());
+        if (typeof config.checkForUpdatesOnLaunch === 'boolean') {
+            return config.checkForUpdatesOnLaunch;
         }
         else {
-            console.error(`Error in configuration file: ${config.checkForUpdatesOnStartup}, a ${typeof config.checkForUpdatesOnStartup}, is not a boolean (true/false).\nPlease edit the value in ${os.homedir()}/.profilelauncherconfig to resolve this issue.\n`);
+            console.error(`Error in configuration file: ${config.checkForUpdatesOnLaunch}, a ${typeof config.checkForUpdatesOnLaunch}, is not a boolean (true/false).\nPlease edit the value in ${os.homedir()}/.profilelauncherconfig to resolve this issue.\n`);
             makeWindowPersist();
             process.exit();
         }
     } else {
-        fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnStartup: true}, null, 2));
+        fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnLaunch: true}, null, 2));
         return true;
     }
 }
@@ -94,11 +94,11 @@ if (process.argv.includes('--help')) { // --help argument
     if (/(true|false)/i.test(process.argv[process.argv.indexOf('--enableUpdates') + 1])) {
         const userChoice: boolean = JSON.parse(process.argv[process.argv.indexOf('--enableUpdates') + 1]);
         if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
-            fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnStartup: userChoice}, null, 2));
+            fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnLaunch: userChoice}, null, 2));
             console.log(`Update checking have been ${userChoice ? "enabled": "disabled"}.`);
         } else {
             console.log("The config file doesn't seem to be present on your system. Creating it for you now...")
-            fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnStartup: userChoice}, null, 2));
+            fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnLaunch: userChoice}, null, 2));
             setTimeout(() => { console.log(`Created config file! Updates have been ${userChoice ? "enabled" : "disabled"}.`) }, 500); // add a small delay because it feels nice
         }
     } else {
