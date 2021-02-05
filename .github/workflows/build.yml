@@ -3,7 +3,7 @@ name: build
 on: [push]
 
 jobs:
-  Windows 64-bit Build:
+  Windows-64-bit-Build:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
@@ -17,7 +17,7 @@ jobs:
       run: tsc
     - name: Build for Windows x64
       run: pkg index.js --target node14-win-x64
-  Windows 32-bit Build:
+  Windows-32-bit-Build:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
@@ -31,7 +31,7 @@ jobs:
       run: tsc
     - name: Build for Windows x86
       run: pkg index.js --target node14-windows-x86
-  macOS Build:
+  macOS-Build:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
@@ -45,7 +45,7 @@ jobs:
       run: tsc
     - name: Build for macOS
       run: pkg index.js --target node14-darwin-x64
-  Linux Build:
+  Linux-Build:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
