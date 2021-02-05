@@ -1,4 +1,6 @@
 # ProfileLauncher
+![build](https://github.com/CominAtYou/ProfileLauncher/workflows/build/badge.svg)
+
 A utility to launch a Roblox profile from the command line or desktop.
 ## Usage
 ### From the Desktop
