@@ -29,31 +29,31 @@ $buildSelection = Read-Host "Selection"
 $array = $buildSelection.ToLower().Split(", ")
 
 if ($array.Contains('1')) {
-    compileTS
+    tsc
     Write-Host "Building for Windows 64-bit..."
     pkg .\index.js --target node14-win-x64 --output build/profilelauncher-win-x64
     Write-Output "Build complete!"
 }
 if ($array.Contains('2')) {
-    compileTS
+    tsc
     Write-Host "Building for Windows 32-bit..."
     pkg .\index.js --target node14-win-x86 --output build/profilelauncher-win-x86
     Write-Output "Build complete!"
 }
 if ($array.Contains('3')) {
-    compileTS
+    tsc
     Write-Host "Building for macOS (Intel)..."
     pkg .\index.js --target node14-darwin-x64 --output build/profilelauncher-mac-x64
     Write-Output "Build complete!"
 }
 if ($array.Contains('4')) {
-    compileTS
+    tsc
     Write-Host "Building for Linux 64-bit..."
     pkg .\index.js --target node14-linux-x64 --output build/profilelauncher-linux-x64
     Write-Output "Build complete!"
 }
 if ($array.Contains('all')) {
-    compileTS
+    tsc
     Write-Host "Building for Windows 64-bit..."
     pkg .\index.js --target node14-win-x64 --output build/profilelauncher-win-x64
     Write-Host "Building for Windows 32-bit..."
