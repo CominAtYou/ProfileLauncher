@@ -49,7 +49,12 @@ To re-enable update checks, run `profielauncher --enableUpdateChecks true` if Pr
 ## Building ProfileLauncher
 You will need Node.js installed to build. You will also need PowerShell Core if you are not on Windows and are not building manually.
 ### Automated build
-1. Run build.ps1.
+1. Install tsc and pkg:
+
+    ```
+    npm i -g typescript pkg
+    ```
+2. Run build.ps1.
 ### Manual Build
 1. Clone the repository.
 2. Install tsc and pkg:
