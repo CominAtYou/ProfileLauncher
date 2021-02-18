@@ -4,7 +4,7 @@ import open = require('open');
 import fs = require('fs');
 import os = require('os');
 
-const version = "1.2.1";
+const version = "1.2.2";
 
 function userUpdatesEnabled() {
     if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
