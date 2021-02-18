@@ -8,7 +8,7 @@ const version = "1.2.1";
 
 function userUpdatesEnabled() {
     if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
-        const config: {checkForUpdatesOnLaunch: boolean | any} = JSON.parse(fs.readFileSync(`${os.homedir()}/.profilelauncherconfig`).toString());
+        const config: {checkForUpdatesOnLaunch: boolean} = JSON.parse(fs.readFileSync(`${os.homedir()}/.profilelauncherconfig`).toString());
         if (typeof config.checkForUpdatesOnLaunch === 'boolean') {
             return config.checkForUpdatesOnLaunch;
         }
@@ -41,7 +41,7 @@ function checkForUpdates() {
                 const data: {latestVersion: string, downloadURL: string} = JSON.parse(d);
                 if (data.latestVersion !== version) {
                     console.log(`\x1b[1mA new version of ProfileLauncher is available!\x1b[0m\n\nInstalled version: \x1b[31m${version}\x1b[34m => \x1b[32m${data.latestVersion}\x1b[0m\n`);
-                    console.log(`Download the new version at ${data.downloadURL}`);
+                    console.log(`Download the new version at ${data.downloadURL}\n`);
                 }
             });
         });
@@ -88,7 +88,8 @@ if (process.argv.includes('--help')) { // --help argument
     console.log("--help                Displays this help message.\n");
     console.log("All arguments are optional.\n");
     console.log("Made by CominAtYou - https://github.com/CominAtYou");
-} else if (process.argv.includes("--version")) {
+}
+else if (process.argv.includes("--version")) {
     checkForUpdates();
     console.log("Version " + version);
 } else if (process.argv.includes('--enableUpdateChecks')) {
@@ -96,7 +97,7 @@ if (process.argv.includes('--help')) { // --help argument
         const userChoice: boolean = JSON.parse(process.argv[process.argv.indexOf('--enableUpdateChecks') + 1]);
         if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
             fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnLaunch: userChoice}, null, 2));
-            console.log(`Update checking have been ${userChoice ? "enabled": "disabled"}.`);
+            console.log(`Update checking has been ${userChoice ? "enabled": "disabled"}.`);
         } else {
             console.log("The config file doesn't seem to be present on your system. Creating it for you now...")
             fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnLaunch: userChoice}, null, 2));
@@ -124,7 +125,9 @@ if (process.argv.includes('--help')) { // --help argument
         output: process.stdout
     });
 
-    setTimeout(() => {rl.question("Enter a username: ", username => { // let update checks finish first with little delay to actual program startup
+    setTimeout(() => {
+        console.log(`Welcome to ProfileLauncher v${version}.\n`);
+        rl.question("Enter a username: ", username => { // let update checks finish first with little delay to actual program startup
         if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(username) === true) {
             getProfile(username);
             rl.close();

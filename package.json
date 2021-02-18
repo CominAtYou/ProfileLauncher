@@ -9,6 +9,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/CominAtYou/ProfileLauncher.git"
+  },
   "dependencies": {
     "@types/node": "^14.14.22",
     "open": "^7.4.0"
