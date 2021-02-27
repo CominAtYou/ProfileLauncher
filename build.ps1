@@ -7,7 +7,7 @@ if ($? -eq $false) {
 
 Get-Command tsc 2>&1 > $NULL
 if ($? -eq $false) {
-    Write-Output "tsc isn't detected, please intslal it then re-run the script."
+    Write-Output "tsc isn't detected, please install it then re-run the script."
     exit
 }
 

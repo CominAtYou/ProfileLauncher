@@ -128,15 +128,16 @@ else if (process.argv.includes("--version")) {
     setTimeout(() => {
         console.log(`Welcome to ProfileLauncher v${version}.\n`);
         rl.question("Enter a username: ", username => { // let update checks finish first with little delay to actual program startup
-        if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(username) === true) {
-            getProfile(username);
-            rl.close();
-        } else {
-            console.log("Invalid username provided!\n");
-            rl.close();
-            makeWindowPersist();
-        }
-    })}, 200);
+            if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(username) === true) {
+                getProfile(username);
+                rl.close();
+            } else {
+                console.log("Invalid username provided!\n");
+                rl.close();
+                makeWindowPersist();
+            }
+        });
+    }, 200);
 } else { // complains about invalid arguments
     let args = [...process.argv];
     args.slice(2); // remove the dumb file paths from the args array
