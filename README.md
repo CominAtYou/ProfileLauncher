@@ -18,7 +18,7 @@ profilelauncher [options]
 
 `--help`: Displays a list of options.
 ## Putting ProfileLauncher on your PATH
-Putting ProfileLauncher on your path is a good idea if you want to be able to run it from anywhere you can input a command, for example, on Windows, this enables ProfileLauncher to be launched just by typing `profilelauncher` into the Run dialog. If you plan to only run it from a desktop shortcut or a specific folder, then this is not nessecary.
+Putting ProfileLauncher on your path is a good idea if you want to be able to run it from anywhere you can input a command, for example, on Windows, this enables ProfileLauncher to be launched just by typing `profilelauncher` into the Run dialog, and on Linux systems running GNOME, this allows you run it from the command dialog (Alt+F2). If you plan to only run it from a desktop shortcut or a specific folder, then this is not nessecary.
 ### Windows
 1. Download the latest respective executable for your system from the [releases](https://github.com/CominAtYou/ProfileLauncher/releases) page.
 2. **Rename the executable to `profilelauncher`**.

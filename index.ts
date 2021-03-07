@@ -4,7 +4,12 @@ import open = require('open');
 import fs = require('fs');
 import os = require('os');
 
-const version = "1.2.2";
+const version = "1.2.3";
+
+function makeWindowPersist() { // make the window persist for non-cli users
+    let yeet = readline.createInterface({input: process.stdin, output: process.stdout});
+    yeet.question("Press enter to exit.\n", () => {yeet.close()});
+}
 
 function userUpdatesEnabled() {
     if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
@@ -23,13 +28,8 @@ function userUpdatesEnabled() {
     }
 }
 
-function makeWindowPersist() { // make the window persist for non-cli users
-    let yeet = readline.createInterface({input: process.stdin, output: process.stdout});
-    yeet.question("Press enter to exit.\n", () => {yeet.close()});
-}
-
 function checkForUpdates() {
-    if (userUpdatesEnabled()) {
+    if (userUpdatesEnabled() === true) {
         const requestOptions = {
             hostname: 'arc.cominatyou.com',
             port: 443,
@@ -70,7 +70,7 @@ function getProfile(username: string) {
         });
     });
     request.on('error', error => {
-        console.error("Something happened. Don't fret, just try again. If this continues to happen, please open an issue on GitHub and provide the following message:\n\n", error);
+        console.error("Something happened. Don't fret, just try again. If this continues to happen, please open an issue on GitHub (https://github.com/CominAtYou/ProfileLauncher/issues/) and provide the following message:\n\n", error);
         makeWindowPersist();
     });
     request.end();
@@ -107,7 +107,8 @@ else if (process.argv.includes("--version")) {
         console.error(`Invalid parameter specified for --enableUpdateChecks`);
     }
 } else if (process.argv.includes('--username') || process.argv.includes('-u')) { // specify username on the command line with --username or -u arg, checks if valid content-wise with .test()
-    if (process.argv[process.argv.indexOf('--username') + 1] !== undefined || process.argv[process.argv.indexOf('-u') + 1] !== undefined) {
+    const arg = process.argv.includes('--username') ? '--username' : '-u';
+    if (process.argv[process.argv.indexOf(arg) + 1] !== undefined) {
         const username = process.argv.includes('--username') ? process.argv[process.argv.indexOf('--username') + 1] : process.argv[process.argv.indexOf('-u') + 1]; // self explanatory
         if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(username)) {
             checkForUpdates();
@@ -118,16 +119,16 @@ else if (process.argv.includes("--version")) {
     } else {
         console.error(`Parameter required for argument '${process.argv.includes('--username') ? '--username' : '-u'}'`);
     }
-} else if (process.argv[2] === undefined || !process.argv[2].startsWith('-')) { // for those who don't use command line args
+} else if (process.argv[2] === undefined) { // for those who don't use command line args
     checkForUpdates();
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
     });
 
-    setTimeout(() => {
+    setTimeout(() => { // let update checks finish first with little delay to actual program startup
         console.log(`Welcome to ProfileLauncher v${version}.\n`);
-        rl.question("Enter a username: ", username => { // let update checks finish first with little delay to actual program startup
+        rl.question("Enter a username: ", username => {
             if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(username) === true) {
                 getProfile(username);
                 rl.close();
@@ -143,6 +144,9 @@ else if (process.argv.includes("--version")) {
     args.slice(2); // remove the dumb file paths from the args array
     let validArgs = ['--username', '-u', '--help', '--version', '--enableUpdateChecks'];
     let invalidArgs = args.filter(v => v.startsWith('-') && !validArgs.includes(v)); // remove the legitimate args if there are any, so that we only complain about the invalid ones
+    for (let i = 0; i < invalidArgs.length; i++) {
+        invalidArgs[i] = `'${invalidArgs[i]}'`;
+    }
     if (invalidArgs.length > 0) { // I think this always returns true but eh
         console.error(`Invalid argument${invalidArgs.length === 1 ? '' : 's'}: ${invalidArgs.join(", ")}`);
         makeWindowPersist();
