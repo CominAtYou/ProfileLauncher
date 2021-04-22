@@ -1,96 +1,19 @@
 import readline = require('readline');
-import https = require('https');
 import open = require('open');
 import fs = require('fs');
 import os = require('os');
+import { makeWindowPersist } from './lib/windowPersist';
+import { checkForUpdates } from './lib/updates';
+import { getProfile } from './lib/getProfile';
+import { showHelp } from './lib/help';
 
-const version = "1.2.3";
-
-function makeWindowPersist() { // make the window persist for non-cli users
-    let yeet = readline.createInterface({input: process.stdin, output: process.stdout});
-    yeet.question("Press enter to exit.\n", () => {yeet.close()});
-}
-
-function userUpdatesEnabled() {
-    if (fs.existsSync(`${os.homedir()}/.profilelauncherconfig`)) {
-        const config: {checkForUpdatesOnLaunch: boolean} = JSON.parse(fs.readFileSync(`${os.homedir()}/.profilelauncherconfig`).toString());
-        if (typeof config.checkForUpdatesOnLaunch === 'boolean') {
-            return config.checkForUpdatesOnLaunch;
-        }
-        else {
-            console.error(`Error in configuration file: ${config.checkForUpdatesOnLaunch}, a ${typeof config.checkForUpdatesOnLaunch}, is not a boolean (true/false).\nPlease edit the value in ${os.homedir()}/.profilelauncherconfig to resolve this issue.\n`);
-            makeWindowPersist();
-            process.exit();
-        }
-    } else {
-        fs.writeFileSync(`${os.homedir()}/.profilelauncherconfig`, JSON.stringify({checkForUpdatesOnLaunch: true}, null, 2));
-        return true;
-    }
-}
-
-function checkForUpdates() {
-    if (userUpdatesEnabled() === true) {
-        const requestOptions = {
-            hostname: 'arc.cominatyou.com',
-            port: 443,
-            path: '/sw-versioning/ProfileLauncher.json',
-            method: 'GET'
-        }
-        const request = https.request(requestOptions, res => {
-            res.on('data', d => {
-                const data: {latestVersion: string, downloadURL: string} = JSON.parse(d);
-                if (data.latestVersion !== version) {
-                    console.log(`\x1b[1mA new version of ProfileLauncher is available!\x1b[0m\n\nInstalled version: \x1b[31m${version}\x1b[34m => \x1b[32m${data.latestVersion}\x1b[0m\n`);
-                    console.log(`Download the new version at ${data.downloadURL}\n`);
-                }
-            });
-        });
-        request.on('error', () => {}); // fail silently
-        request.end();
-    }
-}
-
-function getProfile(username: string) {
-    const requestOptions = {
-        hostname: 'api.roblox.com',
-        port: 443,
-        path: `/users/get-by-username?username=${username}`,
-        method: 'GET'
-    }
-    const request = https.request(requestOptions, res => {
-        res.on('data', d => {
-            const data: {Id: number, Username: string, AvatarUri: null, AvatarFinal: boolean, IsOnline: boolean, errorMessage: string, success: boolean} = JSON.parse(d);
-            if (data.success === undefined && typeof data.Id === "number") { // roblox ids will only get bigger so i can't test in a range and as long as we get a number back it's fine
-                open(`https://roblox.com/users/${data.Id}/profile`);
-            }
-            else if (data.success === false && data.errorMessage === "User not found") {
-                console.error("That user doesn't exist!");
-                makeWindowPersist();
-            }
-        });
-    });
-    request.on('error', error => {
-        console.error("Something happened. Don't fret, just try again. If this continues to happen, please open an issue on GitHub (https://github.com/CominAtYou/ProfileLauncher/issues/) and provide the following message:\n\n", error);
-        makeWindowPersist();
-    });
-    request.end();
-}
+const version = "1.2.4";
 
 if (process.argv.includes('--help')) { // --help argument
-    console.log(`\x1b[1mProfileLauncher Help\x1b[0m - Version ${version}`);
-    console.log("A utility to open the Roblox profile of a user via the command line or desktop.\n");
-    console.log("\x1b[1mUsage\x1b[0m: ProfileLauncher [arguments]\n");
-    console.log("\x1b[1m\x1b[4mARGUMENTS\x1b[0m");
-    console.log("-u, --username        Specify the username of the profile you wish to open.");
-    console.log("--enableUpdateChecks  Takes true or false as a value. Set to true to enable")
-    console.log("                       update checking, or set to false to disable it.")
-    console.log("--version             Prints the version of the program.");
-    console.log("--help                Displays this help message.\n");
-    console.log("All arguments are optional.\n");
-    console.log("Made by CominAtYou - https://github.com/CominAtYou");
+    showHelp(version);
 }
 else if (process.argv.includes("--version")) {
-    checkForUpdates();
+    checkForUpdates(version);
     console.log("Version " + version);
 } else if (process.argv.includes('--enableUpdateChecks')) {
     if (/(true|false)/i.test(process.argv[process.argv.indexOf('--enableUpdateChecks') + 1])) {
@@ -111,7 +34,7 @@ else if (process.argv.includes("--version")) {
     if (process.argv[process.argv.indexOf(arg) + 1] !== undefined) {
         const username = process.argv.includes('--username') ? process.argv[process.argv.indexOf('--username') + 1] : process.argv[process.argv.indexOf('-u') + 1]; // self explanatory
         if (/^(?=[^_]+_?[^_]+$)\w{3,20}$/i.test(username)) {
-            checkForUpdates();
+            checkForUpdates(version);
             getProfile(username);
         } else {
             console.error(`Invalid parameter specified for ${process.argv.includes('--username') ? '--username' : '-u'}`);
@@ -120,7 +43,7 @@ else if (process.argv.includes("--version")) {
         console.error(`Parameter required for argument '${process.argv.includes('--username') ? '--username' : '-u'}'`);
     }
 } else if (process.argv[2] === undefined) { // for those who don't use command line args
-    checkForUpdates();
+    checkForUpdates(version);
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
