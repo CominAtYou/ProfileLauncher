@@ -1,6 +1,6 @@
-Get-Command npm 2>&1 > $NULL
 Write-Output "Checking for dependencies..."
 Write-Output "Querying: Node.js, tsc, pkg`n"
+Get-Command npm 2>&1 > $NULL
 if ($? -eq $false) {
     Write-Error "Node.js is required to run this script. Please install it then re-run the script."
     exit
