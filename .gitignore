@@ -1,4 +1,4 @@
-*.js
+index.js
 node_modules
 build
 # Why does Apple have to do this
