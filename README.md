@@ -52,9 +52,13 @@ You will need Node.js installed to build. You will also need PowerShell Core if 
 1. Install tsc and pkg:
 
     ```
-    npm i -g typescript pkg
+    npm i -g typescript
     ```
-2. Run build.ps1.
+2. Run Make:
+    ```
+    make target
+    ```
+    Valid targets are: windows-x64, windows-x86, darwin, and linux-x64.
 ### Manual Build
 1. Clone the repository.
 2. Install tsc and pkg:
