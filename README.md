@@ -52,7 +52,7 @@ You will need Node.js installed to build. You will also need PowerShell Core if 
 1. Install tsc and pkg:
 
     ```
-    npm i -g typescript
+    npm i -g typescript pkg
     ```
 2. Run Make:
     ```
