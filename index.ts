@@ -1,5 +1,4 @@
 import readline = require('readline');
-import open = require('open');
 import fs = require('fs');
 import os = require('os');
 import { makeWindowPersist } from './lib/windowPersist';
@@ -7,7 +6,7 @@ import { checkForUpdates } from './lib/updates';
 import { getProfile } from './lib/getProfile';
 import { showHelp } from './lib/help';
 
-const version = "1.2.4";
+const version = "1.2.5";
 
 if (process.argv.includes('--help')) { // --help argument
     showHelp(version);

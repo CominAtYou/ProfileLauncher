@@ -1,5 +1,6 @@
 import https = require('https');
 import { makeWindowPersist } from './windowPersist';
+import open = require('open');
 export function getProfile(username: String) {
     const requestOptions = {
         hostname: 'api.roblox.com',
