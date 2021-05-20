@@ -47,7 +47,7 @@ By default, ProfileLauncher will check for updates every time it starts up. If y
 
 To re-enable update checks, run `profielauncher --enableUpdateChecks true` if ProfileLauncher is on your [PATH](#putting-profilelauncher-on-your-path), or change the value in `.profilelauncherconfig` to `true`.
 ## Building ProfileLauncher
-You will need Node.js installed to build. You will also need PowerShell Core if you are not on Windows and are not building manually.
+You will need Node.js, tsc, pkg, and make installed to build.
 ### Automated build
 1. Install tsc and pkg:
 
